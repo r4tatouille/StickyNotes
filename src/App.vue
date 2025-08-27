@@ -7,9 +7,15 @@
   /*fungsi tambah memo baru, jadi data apa aja yang ke input 
   yang bakal di tampilkan di aplikasi*/ 
   function addMemo() {
+    /*Dibawah maksudnya */
     memos.value.push( {
       id: Date.now(),
+      /*Dibawah ini maksudnya, data memo nanti di ambil dari 
+      objek "newMemo" yang di sematkan objeknya pada text area di bawah */
       memo: newMemo.value,
+      /*dibawah ini maksudya info waktu dan tgl di generate
+      secara otomatis
+      */ 
       date: new Date().toLocaleDateString("en-GB"),
       backgroundColor : getRandomColor()
     });
