@@ -1,65 +1,73 @@
 <script setup>
-  import { ref } from 'vue';
-  const memos = ref([]);
-  const showform = ref(false);
-  const newMemo = ref("");
+import { onMounted, ref } from "vue";
+const memos = ref([]);
+const showform = ref(false);
+const newMemo = ref("");
+const toDos = ref();
 
-  /*fungsi tambah memo baru, jadi data apa aja yang ke input 
-  yang bakal di tampilkan di aplikasi*/ 
-  function addMemo() {
-    /*Dibawah maksudnya */
-    memos.value.push( {
-      id: Date.now(),
-      /*Dibawah ini maksudnya, data memo nanti di ambil dari 
+
+//ketika tampilan dh keluar
+onMounted(() => {
+  fetch("https://jsonplaceholder.typicode.com/todos")
+    .then((response) => response.json())
+    .then((json) => {toDos.value = (json)});
+});
+
+/*fungsi tambah memo baru, jadi data apa aja yang ke input 
+  yang bakal di tampilkan di aplikasi*/
+function addMemo() {
+  /*Dibawah maksudnya */
+  memos.value.push({
+    id: Date.now(),
+    /*Dibawah ini maksudnya, data memo nanti di ambil dari 
       objek "newMemo" yang di sematkan objeknya pada text area di bawah */
-      memo: newMemo.value,
-      /*dibawah ini maksudya info waktu dan tgl di generate
+    memo: newMemo.value,
+    /*dibawah ini maksudya info waktu dan tgl di generate
       secara otomatis
-      */ 
-      date: new Date().toLocaleDateString("en-GB"),
-      backgroundColor : getRandomColor()
-    });
-    newMemo.value = "";
-    showform.value = false;
-  }
+      */
+    date: new Date().toLocaleDateString("id-ID"),
+    backgroundColor: getRandomColor(),
+  });
+  newMemo.value = "";
+  showform.value = false;
+}
 
-  function getRandomColor() {
-    return `#${Math.floor(Math.random() * 16777215).toString(16)}`
-  }
+function getRandomColor() {
+  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+}
 </script>
 <template>
   <main>
-    {{ memos }}
+    
     <div class="container">
       <header>
         <h1 class="header-title">Memo</h1>
         <button @click="showform = true" class="header-button">+</button>
       </header>
       <div class="card-container">
-        <div class="card">
-        <p class="card-content">Lorem ipsum dolor
-          sit amet consectetur adipisicing elit. 
-          Nam numquam saepe suscipit sed?</p>
-        <p class="card-date">28/09/2002</p>
-        </div>
-        <div class="card">
-        <p class="card-content">Lorem ipsum dolor
-          sit amet consectetur adipisicing elit. 
-          Nam numquam saepe suscipit sed?</p>
-        <p class="card-date">28/09/2002</p>
-        </div>
-        <div class="card">
-        <p class="card-content">Lorem ipsum dolor
-          sit amet consectetur adipisicing elit. 
-          Nam numquam saepe suscipit sed?</p>
-        <p class="card-date">28/09/2002</p>
+        <div v-for="memos in memos" class="card">
+          
+          <p class="card-content">
+            {{ memos.memo }}
+          </p>
+          <p class="card-date">
+            {{ memos.date}}
+          </p>
         </div>
       </div>
       <div v-if="showform" class="form-overlay">
         <div class="form-modal">
-          <button @click="showform = false" class="form-close-btn">&times;</button>
+          <button @click="showform = false" class="form-close-btn">
+            &times;
+          </button>
           {{ newMemo }}
-          <textarea v-model="newMemo" name="memo" id="memo" cols="30" rows="10"></textarea>
+          <textarea
+            v-model="newMemo"
+            name="memo"
+            id="memo"
+            cols="30"
+            rows="10"
+          ></textarea>
           <button @click="addMemo" class="form-save-btn">Save</button>
         </div>
       </div>
@@ -89,11 +97,10 @@ header {
   font-size: 48px;
   font-weight: bold;
   margin-bottom: 25px;
-  color: darkblue; 
-  
+  color: darkblue;
 }
 .header-button {
-  background-color:darkblue;
+  background-color: darkblue;
   border: none;
   padding: 10px;
   width: 50px;
@@ -150,7 +157,7 @@ header {
   top: 5px;
   height: 30px;
   width: 20px;
-  background-color:transparent;
+  background-color: transparent;
   border: none;
   font-size: 25px;
   cursor: pointer;
@@ -163,9 +170,9 @@ header {
   width: 100%;
   background-color: #495a7d;
   border: none;
-  cursor: pointer;  
+  cursor: pointer;
   border-radius: 5px;
   margin-top: 15px;
-  color: white; 
+  color: white;
 }
 </style>
